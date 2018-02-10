@@ -2,10 +2,10 @@
   "name": "npm-dynamo-db-cleaner",
   "version": "1.0.0",
   "description": "Dynamo db clearner for specs",
-  "main": "./dist",
+  "main": "./dist/objects/cleaner.js",
   "scripts": {
     "test": "mocha --recursive --require babel-polyfill --require babel-register --colors --reporter mocha-circle-reporter test/unit/**/**/*.test.js",
-    "build": "babel src -out-dir dist"
+    "build": "babel src --out-dir dist"
   },
   "repository": {
     "type": "git",
@@ -18,9 +18,20 @@
   },
   "homepage": "https://github.com/Vin65/npm-dynamo-db-cleaner",
   "dependencies": {
-
+    "babel": "6.23.0"
   },
   "devDependencies": {
-
+    "aws-sdk": "2.149.0",
+    "babel-cli": "6.26.0",
+    "babel-core": "6.26.0",
+    "babel-loader": "7.1.2",
+    "babel-plugin-syntax-async-functions": "6.13.0",
+    "babel-plugin-transform-regenerator": "6.26.0",
+    "babel-polyfill": "6.26.0",
+    "babel-preset-es2015": "6.24.1",
+    "babel-preset-stage-0": "6.24.1",
+    "babel-register": "6.26.0",
+    "serverless-dynamodb-client": "0.0.2",
+    "uuid": "3.1.0"
   }
 }

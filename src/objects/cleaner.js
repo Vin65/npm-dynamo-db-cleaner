@@ -18,7 +18,7 @@ class DatabaseCleaner {
 
     let database = this.database;
 
-    return database.scan(params, function(err, data) {
+    database.scan(params, function(err, data) {
       if(!data.Items.length) { return (cb ? cb() : undefined); }
 
       let totalCount = data.Items.length - 1; // Taking into account the zero index

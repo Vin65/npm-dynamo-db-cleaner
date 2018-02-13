@@ -2,39 +2,49 @@
 
 // Class that clears out a table within your dynamodb instance
 // Accepts a table name and an array of the key's for the table
-// eg. new DatabaseCleaner('tableName',['key1','key2'])
-
-const AWS = require("aws-sdk");
-const uuid = require('uuid');
-const dynamo = require('serverless-dynamo-client');
+// eg. new DatabaseCleaner(dynamo).deleteAllItemsForTable('tableName',['key1','key2'])
 
 class DatabaseCleaner {
-  constructor(){
-    this.database = dynamo.getDocumentClient({convertEmptyValues: true});
+  constructor(dynamo){
+    this.dynamo = dynamo;
+    this.database = this.dynamo.getDocumentClient({convertEmptyValues: true});
   }
 
-  deleteAllItemsForTable(tableName, keys, cb){
+  _scan(tableName) {
     let params = { TableName: tableName, Select: 'ALL_ATTRIBUTES' };
 
-    let database = this.database;
+    return new Promise((resolve, reject) => {
+      this.database.scan(params, function(err, data) {
+        if (err) { reject(err); }
+        resolve(data);
+      })
+    })
+  }
 
-    database.scan(params, function(err, data) {
-      if(!data.Items.length) { return (cb ? cb() : undefined); }
+  _delete(tableName, item, keys) {
+    let params = { TableName: tableName, Key: {} };
+    keys.forEach((key) => { params.Key[key] = item[key]; });
 
-      let totalCount = data.Items.length - 1; // Taking into account the zero index
+    return new Promise((resolve, reject) => {
+      this.database.delete(params, function(err, data) {
+        if (err) { reject(err); }
+        resolve(data)
+      })
+    })
+  }
 
-      data.Items.forEach(function(item, index) {
-        let params = { TableName: tableName, Key: {} };
+  async deleteAllItemsForTable(tableName, keys, cb) {
+    let data = await this._scan(tableName).catch(err => {throw err});
 
-        keys.forEach((key) => { params.Key[key] = item[key]; });
+    if(!data.Items.length) { return (cb ? cb() : undefined); }
+    let totalCount = data.Items.length - 1; // Taking into account the zero index
 
-        database.delete(params, function(err, data) {
-          if (err){ return err; }
-          if (totalCount === index) { return (cb ? cb() : undefined); }
-        });
-      });
-    });
-  };
+    data.Items.forEach((item, index) => {
+      this._delete(tableName, item , keys).then(data => {
+        if (totalCount === index) { return (cb ? cb() : undefined); }
+      }).catch(err => {throw err});
+    })
+  }
 };
 
 module.exports = DatabaseCleaner;

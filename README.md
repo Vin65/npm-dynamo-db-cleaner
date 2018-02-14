@@ -11,5 +11,5 @@
 
 * To erase some records from a test dynamo database use the `DatabseCleaner.delteAllItemsForTable(tableName, Keys, cb)`
   * tableName is the name of the dynamo table (Required)
-  * keys is an array with the [parition keys](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_DeleteItem.html#DDB-DeleteItem-request-Key) (Required)
+  * keys is an array with the [partition keys](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_DeleteItem.html#DDB-DeleteItem-request-Key) (Required)
   * the cb(callback) is a function to be called after, usually a done() for asynchronous mocha tests. (Optional)

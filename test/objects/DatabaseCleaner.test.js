@@ -1,4 +1,4 @@
-const Cleaner = require('./../../src/objects/cleaner');
+const Cleaner = require('./../../src/objects/DatabaseCleaner');
 const expect = require('chai').expect;
 const sinon = require('sinon');
 

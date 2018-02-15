@@ -1,4 +1,5 @@
 'use strict';
+import 'babel-polyfill';
 
 // Class that clears out a table within your dynamodb instance
 // Accepts a table name and an array of the key's for the table
